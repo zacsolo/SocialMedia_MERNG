@@ -9,15 +9,12 @@ const User = require('../../models/User');
 const { SECRET } = require('../../config');
 
 const generateToken = (user) => {
-  return jwt.sign(
-    {
-      id: user.id,
-      email: user.email,
-      username: user.username,
-    },
-    SECRET,
-    { expiresIn: '1h' }
-  );
+  const newUser = {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+  };
+  return jwt.sign(newUser, SECRET, { expiresIn: '1h' });
 };
 
 module.exports = {

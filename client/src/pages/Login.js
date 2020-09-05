@@ -3,17 +3,16 @@ import { Form, Button, Message } from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 import { useForm } from '../utils/hooks';
-export default function Register(props) {
+
+export default function Login(props) {
   const [errors, setErrors] = useState('');
 
-  const { onSubmit, onChange, values } = useForm(registerUser, {
+  const { onSubmit, onChange, values } = useForm(loginUserCallback, {
     username: '',
-    email: '',
     password: '',
-    confirmPassword: '',
   });
 
-  const [addUser, { loading }] = useMutation(REGISTER_USER, {
+  const [loginUser, { loading }] = useMutation(LOGIN_USER, {
     update(_, result) {
       props.history.push('/');
     },
@@ -23,14 +22,14 @@ export default function Register(props) {
     variables: values,
   });
 
-  function registerUser() {
-    addUser();
+  function loginUserCallback() {
+    loginUser();
   }
 
   return (
     <div className='form-container'>
       <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
-        <h1>Register</h1>
+        <h1>Login</h1>
         <Form.Input
           type='text'
           label='Username'
@@ -40,15 +39,7 @@ export default function Register(props) {
           onChange={onChange}
           error={errors.username && true}
         />
-        <Form.Input
-          type='email'
-          label='Email'
-          placeholder='Email...'
-          name='email'
-          value={values.email}
-          onChange={onChange}
-          error={errors.email && true}
-        />
+
         <Form.Input
           type='password'
           label='Password'
@@ -58,17 +49,8 @@ export default function Register(props) {
           onChange={onChange}
           error={errors.password && true}
         />
-        <Form.Input
-          type='password'
-          label='Confirm Password'
-          placeholder='Confirm Password...'
-          name='confirmPassword'
-          value={values.confirmPassword}
-          onChange={onChange}
-          error={errors.confirmPassword && true}
-        />
         <Button type='submit' primary>
-          Register
+          Login
         </Button>
       </Form>
       {Object.keys(errors).length > 0 && (
@@ -82,21 +64,9 @@ export default function Register(props) {
   );
 }
 
-const REGISTER_USER = gql`
-  mutation register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    register(
-      registerInput: {
-        username: $username
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-      }
-    ) {
+const LOGIN_USER = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
       id
       email
       username

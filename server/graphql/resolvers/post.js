@@ -13,6 +13,7 @@ module.exports = {
       }
     },
     getPost: async (_, { postId }) => {
+      console.log('POST_ID___', postId);
       try {
         const post = await Post.findById(postId);
         if (post) {
@@ -60,7 +61,6 @@ module.exports = {
     },
     likePost: async (_, { postId }, context) => {
       const { username } = checkAuth(context);
-      console.log('CONTEXT__________', context);
       const post = await Post.findById(postId);
       if (post) {
         if (post.likes.find((like) => like.username === username)) {
